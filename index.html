@@ -4,80 +4,218 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Progress Bar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      /* CONFIGURATION VARIABLES */
+      --animation-duration: 3s;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
 
     body {
-      background: linear-gradient(135deg, #1e1e2f, #2a2a4a);
-      color: #fff;
+      background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       padding: 20px;
+      overflow: hidden;
     }
 
-    .progress-container {
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .dashboard {
       width: 100%;
-      max-width: 600px;
-      background: #333;
-      border-radius: 15px;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
       padding: 30px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.4);
-      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: fadeIn 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .progress-item {
+      margin-bottom: 30px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      position: relative;
     }
 
     .progress-text {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, #fff, #aaa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
+    /* Custom Info Button */
+    .info-btn {
+      width: 24px;
+      height: 24px;
+      background: transparent;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      border: 2px solid white;
+    }
+
+    .info-btn::before {
+      content: "I";
+      position: absolute;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .info-btn::after {
+      content: "";
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .info-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    }
+
+    .info-btn:hover::after {
+      opacity: 1;
+    }
+
+    .tooltip {
+      position: absolute;
+      top: 30px;
+      right: 0;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      width: 200px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+      z-index: 10;
+      line-height: 1.4;
+    }
+
+    .info-btn:hover + .tooltip {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Progress Bar with Comet Effect */
     .progress-bar-background {
       width: 100%;
-      background-color: #555;
-      border-radius: 10px;
-      overflow: hidden;
       height: 25px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
     }
 
     .progress-bar-fill {
-      width: 0;
       height: 100%;
-      background: linear-gradient(90deg, #00dbde, #fc00ff);
-      animation: fillBar 3s ease-out forwards;
+      width: 0;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
     }
 
-    @keyframes fillBar {
-      from {
-        width: 0%;
+    .comet {
+      position: absolute;
+      width: 30px;
+      height: 4px;
+      background: white;
+      border-radius: 2px;
+      filter: blur(1px);
+      transform: rotate(-15deg);
+      opacity: 0;
+      animation: cometFly 3s infinite;
+    }
+
+    @keyframes cometFly {
+      0% {
+        left: -30px;
+        opacity: 0;
       }
-      to {
-        width: 0%;
+      20% {
+        opacity: 0.8;
+      }
+      100% {
+        left: 100%;
+        opacity: 0;
       }
     }
 
-    .percentage {
-      margin-top: 10px;
-      font-size: 1.2rem;
-      animation: fadeIn 1s ease-in forwards;
+    .progress-value {
+      margin-top: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: right;
+      background: linear-gradient(90deg, #fff, #aaa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 600px) {
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .dashboard {
+        padding: 25px;
+      }
       .progress-text {
         font-size: 1.2rem;
       }
+    }
 
-      .percentage {
+    @media (max-width: 480px) {
+      .dashboard {
+        padding: 20px;
+        border-radius: 15px;
+      }
+      .progress-text {
+        font-size: 1.1rem;
+      }
+      .progress-bar-background {
+        height: 20px;
+      }
+      .progress-value {
         font-size: 1rem;
       }
     }
@@ -85,27 +223,107 @@
 </head>
 <body>
 
-  <div class="progress-container">
-    <div class="progress-text">Trust Bar</div>
-    <div class="progress-bar-background">
-      <div class="progress-bar-fill" id="progress-bar"></div>
+  <div class="dashboard">
+    <!-- Bar 1 -->
+    <div class="progress-item">
+      <div class="progress-header">
+        <div class="progress-text">Trust Level</div>
+        <button class="info-btn" aria-label="Information"></button>
+        <div class="tooltip">
+          The Trust Level Bar indicates how much he trusts you.
+        </div>
+      </div>
+      <div class="progress-bar-background">
+        <div class="progress-bar-fill" id="bar1">
+          <div class="comet"></div>
+        </div>
+      </div>
+      <div class="progress-value" id="value1">0%</div>
     </div>
-    <div class="percentage" id="percentage">0%</div>
+
+<!--     Bar 2
+<div class="progress-item">
+  <div class="progress-header">
+    <div class="progress-text">Performance</div>
+    <button class="info-btn" aria-label="Information"></button>
+    <div class="tooltip">
+      Indicates the current processing speed and resource efficiency.
+    </div>
   </div>
+  <div class="progress-bar-background">
+    <div class="progress-bar-fill" id="bar2">
+      <div class="comet"></div>
+    </div>
+  </div>
+  <div class="progress-value" id="value2">0%</div>
+</div>
+
+Bar 3
+<div class="progress-item">
+  <div class="progress-header">
+    <div class="progress-text">Data Accuracy</div>
+    <button class="info-btn" aria-label="Information"></button>
+    <div class="tooltip">
+      Shows the reliability and precision of stored information.
+    </div>
+  </div>
+  <div class="progress-bar-background">
+    <div class="progress-bar-fill" id="bar3">
+      <div class="comet"></div>
+    </div>
+  </div>
+  <div class="progress-value" id="value3">0%</div>
+</div>
+  </div> -->
 
   <script>
-    // Animate percentage number
-    let percent = 0;
-    const target = 0;
-    const speed = 30; // Lower is faster
-    const counter = setInterval(() => {
-      if (percent < target) {
-        percent++;
-        document.getElementById("percentage").textContent = percent + "%";
-      } else {
-        clearInterval(counter);
-      }
-    }, speed);
+    // Configuration for each progress bar
+    const bars = [
+      { id: "bar1", valueId: "value1", target: 1, color1: "#4facfe", color2: "#00f2fe" },
+      { id: "bar2", valueId: "value2", target: 72, color1: "#a6c1ee", color2: "#fbc2eb" },
+      { id: "bar3", valueId: "value3", target: 93, color1: "#84fab0", color2: "#8fd3f4" }
+    ];
+
+    // Animate progress bars
+    function animateBars() {
+      bars.forEach(bar => {
+        const barElement = document.getElementById(bar.id);
+        const valueElement = document.getElementById(bar.valueId);
+        
+        // Set gradient colors
+        barElement.style.background = `linear-gradient(90deg, ${bar.color1}, ${bar.color2})`;
+        
+        let current = 0;
+        const duration = 2500; // ms
+        const startTime = Date.now();
+        
+        function update() {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          current = Math.floor(progress * bar.target);
+          
+          barElement.style.width = `${current}%`;
+          valueElement.textContent = `${current}%`;
+          
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          }
+        }
+        
+        requestAnimationFrame(update);
+      });
+    }
+
+    // Initialize everything
+    animateBars();
+    
+    // Restart animations every 5 seconds for demo purposes
+    setInterval(() => {
+      document.querySelectorAll('.comet').forEach(c => c.style.animation = 'none');
+      setTimeout(() => {
+        document.querySelectorAll('.comet').forEach(c => c.style.animation = '');
+      }, 10);
+    }, 5000);
   </script>
 
 </body>
