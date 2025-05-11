@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Stylish Progress Bar</title>
+  <title>Progress Bar</title>
   <style>
     * {
       box-sizing: border-box;
@@ -57,7 +57,7 @@
         width: 0%;
       }
       to {
-        width: 85%;
+        width: 0%;
       }
     }
 
@@ -86,7 +86,7 @@
 <body>
 
   <div class="progress-container">
-    <div class="progress-text">Loading Your Profile...</div>
+    <div class="progress-text">Trust Bar</div>
     <div class="progress-bar-background">
       <div class="progress-bar-fill" id="progress-bar"></div>
     </div>
@@ -96,7 +96,7 @@
   <script>
     // Animate percentage number
     let percent = 0;
-    const target = 85;
+    const target = 0;
     const speed = 30; // Lower is faster
     const counter = setInterval(() => {
       if (percent < target) {
