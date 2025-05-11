@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stylish Progress Bar</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1e1e2f, #2a2a4a);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .progress-container {
+      width: 100%;
+      max-width: 600px;
+      background: #333;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    .progress-text {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    .progress-bar-background {
+      width: 100%;
+      background-color: #555;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 25px;
+    }
+
+    .progress-bar-fill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #00dbde, #fc00ff);
+      animation: fillBar 3s ease-out forwards;
+    }
+
+    @keyframes fillBar {
+      from {
+        width: 0%;
+      }
+      to {
+        width: 85%;
+      }
+    }
+
+    .percentage {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      animation: fadeIn 1s ease-in forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .progress-text {
+        font-size: 1.2rem;
+      }
+
+      .percentage {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress-container">
+    <div class="progress-text">Loading Your Profile...</div>
+    <div class="progress-bar-background">
+      <div class="progress-bar-fill" id="progress-bar"></div>
+    </div>
+    <div class="percentage" id="percentage">0%</div>
+  </div>
+
+  <script>
+    // Animate percentage number
+    let percent = 0;
+    const target = 85;
+    const speed = 30; // Lower is faster
+    const counter = setInterval(() => {
+      if (percent < target) {
+        percent++;
+        document.getElementById("percentage").textContent = percent + "%";
+      } else {
+        clearInterval(counter);
+      }
+    }, speed);
+  </script>
+
+</body>
+</html>
