@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Progress Bar</title>
+  <title>Relationship Meter</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -194,6 +194,79 @@
       color: transparent;
     }
 
+    /* Popup Notification */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .popup.active {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .popup h2 {
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+      background: linear-gradient(90deg, #00f2fe, #4facfe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .popup p {
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .popup-btn {
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .popup-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 99;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
       .dashboard {
@@ -201,6 +274,12 @@
       }
       .progress-text {
         font-size: 1.2rem;
+      }
+      .popup {
+        padding: 20px;
+      }
+      .popup h2 {
+        font-size: 1.5rem;
       }
     }
 
@@ -217,6 +296,10 @@
       }
       .progress-value {
         font-size: 1rem;
+      }
+      .popup {
+        width: 95%;
+        padding: 15px;
       }
     }
   </style>
@@ -240,51 +323,57 @@
       </div>
       <div class="progress-value" id="value1">0%</div>
     </div>
-Bar 2
-<div class="progress-item">
-  <div class="progress-header">
-    <div class="progress-text">Hate Level</div>
-    <button class="info-btn" aria-label="Information"></button>
-    <div class="tooltip">
-      The Hate Level Bar indicates how much he hates you.
-    </div>
-  </div>
-  <div class="progress-bar-background">
-    <div class="progress-bar-fill" id="bar2">
-      <div class="comet"></div>
-    </div>
-  </div>
-  <div class="progress-value" id="value2">0%</div>
-</div>
 
-<!-- Bar 3
-<div class="progress-item">
-  <div class="progress-header">
-    <div class="progress-text">Data Accuracy</div>
-    <button class="info-btn" aria-label="Information"></button>
-    <div class="tooltip">
-      Shows the reliability and precision of stored information.
+    <!-- Bar 2 -->
+    <div class="progress-item">
+      <div class="progress-header">
+        <div class="progress-text">Hate Level</div>
+        <button class="info-btn" aria-label="Information"></button>
+        <div class="tooltip">
+          The Hate Level Bar indicates how much he hates you.
+        </div>
+      </div>
+      <div class="progress-bar-background">
+        <div class="progress-bar-fill" id="bar2">
+          <div class="comet"></div>
+        </div>
+      </div>
+      <div class="progress-value" id="value2">0%</div>
     </div>
   </div>
-  <div class="progress-bar-background">
-    <div class="progress-bar-fill" id="bar3">
-      <div class="comet"></div>
-    </div>
+
+  <!-- Popup Notification -->
+  <div class="popup" id="successPopup">
+    <h2>Congratulations!</h2>
+    <p>Look, I've already given a warning. But if the same nonsense happens again, I won’t take any further action nor continue the conversation.</p>
+    <button class="popup-btn" id="closePopup">Continue</button>
   </div>
-  <div class="progress-value" id="value3">0%</div>
-</div>
-  </div> -->
+
+  <div class="overlay" id="overlay"></div>
 
   <script>
     // Configuration for each progress bar
     const bars = [
-      { id: "bar1", valueId: "value1", target: 5, color1: "#4facfe", color2: "#00f2fe" },
-      { id: "bar2", valueId: "value2", target: 95, color1: "#D776B3", color2: "#EF1C1C" },
-      { id: "bar3", valueId: "value3", target: 93, color1: "#84fab0", color2: "#8fd3f4" }
+      { id: "bar1", valueId: "value1", target: 100, color1: "#4facfe", color2: "#00f2fe" },
+      { id: "bar2", valueId: "value2", target: 0, color1: "#D776B3", color2: "#EF1C1C" }
     ];
+
+    // DOM Elements
+    const successPopup = document.getElementById('successPopup');
+    const overlay = document.getElementById('overlay');
+    const closeBtn = document.getElementById('closePopup');
+
+    // Close popup function
+    closeBtn.addEventListener('click', () => {
+      successPopup.classList.remove('active');
+      overlay.classList.remove('active');
+    });
 
     // Animate progress bars
     function animateBars() {
+      let completedAnimations = 0;
+      const totalBars = bars.length;
+      
       bars.forEach(bar => {
         const barElement = document.getElementById(bar.id);
         const valueElement = document.getElementById(bar.valueId);
@@ -306,6 +395,12 @@ Bar 2
           
           if (progress < 1) {
             requestAnimationFrame(update);
+          } else {
+            completedAnimations++;
+            // Check if all animations are complete and conditions are met
+            if (completedAnimations === totalBars) {
+              checkForSuccess();
+            }
           }
         }
         
@@ -313,7 +408,35 @@ Bar 2
       });
     }
 
+    // Check if trust is 100% and hate is 0%
+    function checkForSuccess() {
+      const trustValue = parseInt(document.getElementById('value1').textContent);
+      const hateValue = parseInt(document.getElementById('value2').textContent);
+      
+      if (trustValue === 100 && hateValue === 0) {
+        // Show popup after a slight delay
+        setTimeout(() => {
+          successPopup.classList.add('active');
+          overlay.classList.add('active');
+        }, 500);
+      }
+    }
+
+    // Create comet elements
+    function createComets() {
+      bars.forEach(bar => {
+        const barElement = document.getElementById(bar.id);
+        for (let i = 0; i < 3; i++) {
+          const comet = document.createElement('div');
+          comet.className = 'comet';
+          comet.style.animationDelay = `${i * 1.5}s`;
+          barElement.appendChild(comet);
+        }
+      });
+    }
+
     // Initialize everything
+    createComets();
     animateBars();
     
     // Restart animations every 5 seconds for demo purposes
